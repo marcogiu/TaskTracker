@@ -1,11 +1,18 @@
-import { Home } from "./pages/Home";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Login, Signup, Home, Dashboard } from "./pages";
+import { Layout } from "./components/Layout";
 
-const App = () => {
+export const App = () => {
   return (
-    <div className="bg-red-600">
-      <Home />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Signup />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 };
-
-export default App;
