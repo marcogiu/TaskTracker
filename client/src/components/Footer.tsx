@@ -1,3 +1,5 @@
+import logo from "../assets/logoTaskTracker.png";
+
 export const Footer = () => {
   return (
     <footer className="bg-gray-800 h-[10vh]">
@@ -5,7 +7,7 @@ export const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <img src="/logo.svg" alt="Logo" className="h-8 w-auto" />
+            <img src={logo} alt="Logo" className="h-[8vh] w-auto" />
           </div>
 
           {/* Informazioni aggiuntive o testo */}

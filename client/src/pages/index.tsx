@@ -1,5 +1,5 @@
-import { Login } from "./Login";
-import { Signup } from "./Signup";
+import { Login } from "../components/Login";
+import { Signup } from "../components/Signup";
 import { Home } from "./Home";
 import { Dashboard } from "./Dashboard";
 

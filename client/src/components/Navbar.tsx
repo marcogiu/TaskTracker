@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import logo from "../assets/logoTaskTracker.png";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,11 +13,11 @@ export const Navbar = () => {
     <nav className="bg-green-600 h-[10vh]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
         <div className="flex-shrink-0">
-          <img src="/logo.svg" alt="TaskTracker Logo" className="h-8 w-auto" />
+          <Link to="/">
+            <img src={logo} alt="TaskTracker Logo" className="h-[10vh] w-auto" />
+          </Link>
         </div>
-
-        <div className="text-white text-lg font-semibold">TaskTracker</div>
-
+        <div className="text-white text-2xl font-bold">TaskTracker</div>
         <div className="md:hidden">
           <button
             onClick={toggleMenu}

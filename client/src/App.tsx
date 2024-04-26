@@ -8,8 +8,6 @@ export const App = () => {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Signup />} />
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
       </Routes>
