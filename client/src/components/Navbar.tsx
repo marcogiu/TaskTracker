@@ -67,22 +67,22 @@ export const Navbar = () => {
       <Box display={{ base: "none", md: "flex" }}>
         {isLoggedIn ? (
           <ButtonGroup spacing="5">
-            <Button colorScheme="red" onClick={() => navigate("/dashboard")}>
+            <Button colorScheme="teal" onClick={() => navigate("/dashboard")}>
               Dashboard
             </Button>
             <Button variant="outline" colorScheme="teal" onClick={() => navigate("/profile")}>
               My Profile
             </Button>
-            <Button colorScheme="red" onClick={handleLogout}>
+            <Button colorScheme="teal" onClick={handleLogout}>
               Logout
             </Button>
           </ButtonGroup>
         ) : (
           <ButtonGroup spacing="5">
-            <Button colorScheme="red" onClick={() => navigate("/login")}>
+            <Button colorScheme="teal" onClick={() => navigate("/login")}>
               Login
             </Button>
-            <Button variant="outline" colorScheme="red" onClick={() => navigate("/signup")}>
+            <Button variant="outline" colorScheme="teal" onClick={() => navigate("/signup")}>
               Sign Up
             </Button>
           </ButtonGroup>
