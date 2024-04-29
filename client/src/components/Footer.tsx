@@ -1,71 +1,37 @@
+import { Flex, Box, Text, Image, Link, Icon } from "@chakra-ui/react";
+import { FaFacebookF, FaTwitter, FaGithub } from "react-icons/fa";
 import logo from "../assets/logoTaskTracker.png";
+import { useNavigate } from "react-router-dom";
 
 export const Footer = () => {
+  const navigate = useNavigate();
   return (
-    <footer className="bg-gray-800 h-[10vh]">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          {/* Logo */}
-          <div className="flex-shrink-0">
-            <img src={logo} alt="Logo" className="h-[8vh] w-auto" />
-          </div>
+    <Box height="10vh" bg="teal.500">
+      <Flex maxW="7xl" mx="auto" px={4} align="center" justify="space-between" height="full">
+        {/* Logo */}
+        <Box flexShrink={0} onClick={() => navigate("/")} cursor="pointer">
+          <Image src={logo} alt="Task Tracker Logo" height="8vh" />
+        </Box>
 
-          {/* Informazioni aggiuntive o testo */}
-          <div className="text-white text-center md:text-left mt-4 md:mt-0">
-            <p className="mb-2">Informazioni aggiuntive qui...</p>
-            <p className="text-sm">© {new Date().getFullYear()} Il Tuo Nome</p>
-          </div>
+        {/* Informazioni aggiuntive o testo */}
+        <Box color="teal" textAlign={{ base: "center", md: "left" }} mt={{ base: 4, md: 0 }}>
+          <Text>Task Tracker, organizza il tuo lavoro e la tua vita.</Text>
+          <Text fontSize="sm">© {new Date().getFullYear()} Task Tracker Inc.</Text>
+        </Box>
 
-          {/* Social links o altro */}
-          <div className="flex mt-4 md:mt-0">
-            <a href="#" className="text-white hover:text-gray-300 mx-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M14 5l7 7m0 0l-7 7m7-7H3"
-                />
-              </svg>
-            </a>
-            <a href="#" className="text-white hover:text-gray-300 mx-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                />
-              </svg>
-            </a>
-            <a href="#" className="text-white hover:text-gray-300 mx-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 10V3L4 14h7v7l9-11h-7z"
-                />
-              </svg>
-            </a>
-          </div>
-        </div>
-      </div>
-    </footer>
+        {/* Social links */}
+        <Flex mt={{ base: 4, md: 0 }}>
+          <Link href="https://facebook.com" isExternal color="teal" _hover={{ color: "teal.300" }} mx={2}>
+            <Icon as={FaFacebookF} boxSize={6} />
+          </Link>
+          <Link href="https://twitter.com" isExternal color="teal" _hover={{ color: "teal.300" }} mx={2}>
+            <Icon as={FaTwitter} boxSize={6} />
+          </Link>
+          <Link href="https://github.com" isExternal color="teal" _hover={{ color: "teal.300" }} mx={2}>
+            <Icon as={FaGithub} boxSize={6} />
+          </Link>
+        </Flex>
+      </Flex>
+    </Box>
   );
 };
