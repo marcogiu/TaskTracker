@@ -1,11 +1,7 @@
 // userReducer.ts
 import { createReducer, PayloadAction } from "@reduxjs/toolkit";
-import {
-  registerUserRequest,
-  registerUserSuccess,
-  registerUserFailure,
-} from "../actions/userActions";
-import { User } from "../types";
+import { registerUserRequest, registerUserSuccess, registerUserFailure } from "../actions/userActions";
+import { User } from "../../models";
 
 interface UserState {
   user: null | User;

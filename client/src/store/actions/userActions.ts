@@ -1,6 +1,6 @@
 // userActions.ts
 import { createAction } from "@reduxjs/toolkit";
-import { User } from "../types";
+import { User } from "../../models";
 
 export const registerUserRequest = createAction<User>("user/registerRequest");
 export const registerUserSuccess = createAction<User>("user/registerSuccess");

@@ -22,11 +22,12 @@ export const Home = (): JSX.Element => {
     <MotionFlex direction={{ base: "row", xs: "column" }} alignItems="center" justifyContent="center" h="90vh" overflow="hidden">
       <MotionFlex
         gap={5}
-        width={["95%", "70%"]} // Responsive width
+        width={["95%", "60%"]} // Responsive width
         borderRadius="lg"
         variants={mainCardVariants}
         initial="hidden"
         animate="visible"
+        boxShadow="dark-lg"
       >
         <Image src={hero} alt="Hero Image" boxSize={imageBoxSize} objectFit="cover" borderRadius="lg" onError={(e) => (e.currentTarget.src = "path_to_fallback_image.png")} />
         <MotionFlex direction="column" justifyContent="center">

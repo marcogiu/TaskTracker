@@ -1,0 +1,68 @@
+{
+  "tasks": [
+    {
+      "id": "task-001",
+      "title": "Update Website Homepage",
+      "description": "Refresh the design of the homepage to align with new branding guidelines.",
+      "userId": "user-123",
+      "imageUrl": "https://example.com/images/homepage-update.jpg",
+      "dueDate": "2024-05-20T12:00:00.000Z",
+      "priority": "high",
+      "tags": ["design", "urgent"],
+      "checklist": [
+        {
+          "id": "chk-001",
+          "text": "Gather design requirements",
+          "isCompleted": true
+        },
+        {
+          "id": "chk-002",
+          "text": "Update homepage banner",
+          "isCompleted": false
+        }
+      ],
+      "attachments": [
+        {
+          "id": "att-001",
+          "url": "https://example.com/docs/branding-guidelines.pdf",
+          "filename": "branding-guidelines.pdf"
+        }
+      ],
+      "status": "in progress",
+      "createdAt": "2024-04-01T09:00:00.000Z",
+      "updatedAt": "2024-04-15T09:00:00.000Z"
+    },
+    {
+      "id": "task-002",
+      "title": "Plan Annual Company Retreat",
+      "description": "Organize the logistics for the annual company retreat, including venue, catering, and activities.",
+      "userId": "user-124",
+      "imageUrl": null,
+      "dueDate": "2024-08-01T12:00:00.000Z",
+      "priority": "medium",
+      "tags": ["event", "planning"],
+      "size": "large",
+      "checklist": [
+        {
+          "id": "chk-003",
+          "text": "Book venue",
+          "isCompleted": false
+        },
+        {
+          "id": "chk-004",
+          "text": "Arrange transportation",
+          "isCompleted": false
+        },
+        {
+          "id": "chk-005",
+          "text": "Send out invitations",
+          "isCompleted": false
+        }
+      ],
+      "attachments": [],
+      "status": "pending",
+      "createdAt": "2024-03-20T11:00:00.000Z",
+      "updatedAt": null
+    }
+  ]
+}

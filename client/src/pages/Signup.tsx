@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useToast, Flex, Box, FormControl, FormLabel, Input, Button, Heading, InputGroup, InputRightElement, IconButton } from "@chakra-ui/react";
+import { useToast, Flex, Box, FormControl, FormLabel, Input, Button, Heading, InputGroup, InputRightElement, IconButton, useColorModeValue } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { motion } from "framer-motion";
 import { useRegisterMutation } from "../store/userSlice";
-import { User } from "../store/types";
+import { User } from "../models";
 import { v4 as uuidv4 } from "uuid";
+
+const MotionBox = motion(Box);
 
 export const Signup = (): JSX.Element => {
   const [formData, setFormData] = useState<User>({
@@ -13,23 +16,22 @@ export const Signup = (): JSX.Element => {
     email: "",
     password: "",
   });
-
+  const [confirmPassword, setConfirmPassoword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
-
   const navigate = useNavigate();
   const toast = useToast();
   const [register, { isLoading }] = useRegisterMutation();
-  const [confirmPass, setConfirmPass] = useState<string>("");
+  const bg = useColorModeValue("white", "gray.700");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (formData.password !== confirmPass) {
+    if (formData.password !== confirmPassword) {
       toast({
         title: "Error",
         description: "Passwords do not match",
@@ -52,34 +54,22 @@ export const Signup = (): JSX.Element => {
         position: "top",
       });
       navigate("/dashboard");
-    } catch (error: unknown) {
-      if (typeof error === "object" && error !== null && "data" in error) {
-        const fetchError = error as { data?: { message?: string } };
-        toast({
-          title: "Registration Failed",
-          description: fetchError.data?.message || "Registration failed. Please try again.",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-          position: "top",
-        });
-      } else {
-        toast({
-          title: "Unexpected Error",
-          description: "An unexpected error occurred. Please try again.",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-          position: "top",
-        });
-      }
+    } catch (error: any) {
+      toast({
+        title: "Registration Failed",
+        description: error.data?.message || "Registration failed. Please try again.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
     }
   };
 
   return (
-    <Flex align="center" justify="center" minHeight="80vh">
-      <Box width="full" maxW="md" p={8} borderWidth={1} borderRadius="lg" boxShadow="lg" bg="white">
-        <Heading as="h2" size="xl" textAlign="center" mb={6}>
+    <Flex align="center" justify="center" minHeight="90vh" bg={bg}>
+      <MotionBox width="full" maxW="md" p={8} borderRadius="lg" boxShadow="dark-lg" bg="white" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+        <Heading as="h2" size="xl" textAlign="center" mb={6} color="teal.600">
           Registration
         </Heading>
         <form onSubmit={handleSubmit}>
@@ -94,13 +84,7 @@ export const Signup = (): JSX.Element => {
           <FormControl id="password" isRequired mb={4}>
             <FormLabel>Password</FormLabel>
             <InputGroup>
-              <Input
-                name="password"
-                type={showPassword ? "text" : "password"}
-                placeholder="Password"
-                value={formData.password}
-                onChange={handleChange}
-              />
+              <Input name="password" type={showPassword ? "text" : "password"} placeholder="Password" value={formData.password} onChange={handleChange} />
               <InputRightElement>
                 <IconButton
                   icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
@@ -115,12 +99,7 @@ export const Signup = (): JSX.Element => {
           <FormControl id="confirmPassword" isRequired mb={6}>
             <FormLabel>Confirm Password</FormLabel>
             <InputGroup>
-              <Input
-                type={showConfirmPassword ? "text" : "password"}
-                placeholder="Confirm Password"
-                value={confirmPass}
-                onChange={(e) => setConfirmPass(e.target.value)}
-              />
+              <Input type={showConfirmPassword ? "text" : "password"} placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassoword(e.target.value)} />
               <InputRightElement>
                 <IconButton
                   icon={showConfirmPassword ? <ViewOffIcon /> : <ViewIcon />}
@@ -132,11 +111,11 @@ export const Signup = (): JSX.Element => {
               </InputRightElement>
             </InputGroup>
           </FormControl>
-          <Button colorScheme="blue" width="full" type="submit" isLoading={isLoading} loadingText="Registering...">
+          <Button colorScheme="teal" width="full" type="submit" isLoading={isLoading} loadingText="Registering..." _hover={{ transform: "scale(1.05)" }} _active={{ transform: "scale(0.95)" }}>
             Register
           </Button>
         </form>
-      </Box>
+      </MotionBox>
     </Flex>
   );
 };

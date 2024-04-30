@@ -8,20 +8,15 @@ import { useLoginMutation } from "../store/userSlice";
 const MotionBox = motion(Box);
 
 export const Login = (): JSX.Element => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-  const [show, setShow] = useState<boolean>(false);
-
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
   const [login, { isLoading }] = useLoginMutation();
-
   const bg = useColorModeValue("white", "gray.700");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -52,7 +47,7 @@ export const Login = (): JSX.Element => {
     } catch (error) {
       toast({
         title: "Login Failed",
-        description: "Login failed. Please check your credentials.",
+        description: "Incorrect email or password.",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -61,39 +56,25 @@ export const Login = (): JSX.Element => {
     }
   };
 
-  const toggleShow = () => setShow(!show);
-
-  const inputVariants = {
-    hover: { scale: 1.02 },
-    focus: { borderColor: "teal.300", boxShadow: "0 0 0 1px #319795" },
-  };
+  const toggleShowPassword = () => setShowPassword((prev) => !prev);
 
   return (
     <Flex align="center" justify="center" height="90vh" bg={bg}>
-      <MotionBox width="full" maxW="md" p={8} borderRadius={8} bg="white" boxShadow="xl">
+      <MotionBox width="full" maxW="lg" p={8} borderRadius={8} bg="white" boxShadow="dark-lg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
         <Heading as="h2" size="xl" textAlign="center" mb={6} color="teal.600">
           Login
         </Heading>
         <form onSubmit={handleSubmit}>
           <FormControl id="email" isRequired mb={4}>
             <FormLabel>Email</FormLabel>
-            <Input name="email" type="email" placeholder="Enter your email" value={formData.email} onChange={handleChange} variants={inputVariants} whileHover="hover" whileFocus="focus" />
+            <Input name="email" type="email" placeholder="Enter your email" value={formData.email} onChange={handleChange} />
           </FormControl>
           <FormControl id="password" isRequired mb={6}>
             <FormLabel>Password</FormLabel>
             <InputGroup>
-              <Input
-                name="password"
-                type={show ? "text" : "password"}
-                placeholder="Enter your password"
-                value={formData.password}
-                onChange={handleChange}
-                variants={inputVariants}
-                whileHover="hover"
-                whileFocus="focus"
-              />
+              <Input name="password" type={showPassword ? "text" : "password"} placeholder="Enter your password" value={formData.password} onChange={handleChange} />
               <InputRightElement>
-                <IconButton aria-label={show ? "Hide password" : "Show password"} icon={show ? <ViewOffIcon /> : <ViewIcon />} onClick={toggleShow} size="sm" variant="ghost" />
+                <IconButton aria-label={showPassword ? "Hide password" : "Show password"} icon={showPassword ? <ViewOffIcon /> : <ViewIcon />} onClick={toggleShowPassword} size="sm" variant="ghost" />
               </InputRightElement>
             </InputGroup>
           </FormControl>
