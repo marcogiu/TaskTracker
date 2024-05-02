@@ -7,8 +7,9 @@
       "userId": "user-123",
       "imageUrl": "https://example.com/images/homepage-update.jpg",
       "dueDate": "2024-05-20T12:00:00.000Z",
-      "priority": "high",
+      "priority": "low",
       "tags": ["design", "urgent"],
+      "size": "medium",
       "checklist": [
         {
           "id": "chk-001",
@@ -39,7 +40,7 @@
       "userId": "user-124",
       "imageUrl": null,
       "dueDate": "2024-08-01T12:00:00.000Z",
-      "priority": "medium",
+      "priority": "low",
       "tags": ["event", "planning"],
       "size": "large",
       "checklist": [
@@ -63,6 +64,138 @@
       "status": "pending",
       "createdAt": "2024-03-20T11:00:00.000Z",
       "updatedAt": null
+    },
+    {
+      "id": "task-003",
+      "title": "Develop New Product Line",
+      "description": "Lead the research and development of a new line of eco-friendly products.",
+      "userId": "user-125",
+      "imageUrl": "https://example.com/images/new-product-line.jpg",
+      "dueDate": "2024-09-15T12:00:00.000Z",
+      "priority": "high",
+      "tags": ["product", "innovation"],
+      "size": "large",
+      "checklist": [
+        {
+          "id": "chk-006",
+          "text": "Market research",
+          "isCompleted": false
+        },
+        {
+          "id": "chk-007",
+          "text": "Prototype design",
+          "isCompleted": false
+        }
+      ],
+      "attachments": [
+        {
+          "id": "att-002",
+          "url": "https://example.com/docs/product-specs.pdf",
+          "filename": "product-specs.pdf"
+        }
+      ],
+      "status": "planning",
+      "createdAt": "2024-04-10T10:00:00.000Z",
+      "updatedAt": "2024-04-20T15:30:00.000Z"
+    },
+    {
+      "id": "task-004",
+      "title": "Update Internal Training Materials",
+      "description": "Revise and update our internal training materials to include the latest process changes.",
+      "userId": "user-126",
+      "imageUrl": "https://example.com/images/training-materials.jpg",
+      "dueDate": "2024-10-20T12:00:00.000Z",
+      "priority": "high",
+      "tags": ["training", "HR"],
+      "size": "small",
+      "checklist": [
+        {
+          "id": "chk-008",
+          "text": "Gather updated process info",
+          "isCompleted": true
+        },
+        {
+          "id": "chk-009",
+          "text": "Rewrite training modules",
+          "isCompleted": false
+        }
+      ],
+      "attachments": [
+        {
+          "id": "att-003",
+          "url": "https://example.com/docs/training-updates.pdf",
+          "filename": "training-updates.pdf"
+        }
+      ],
+      "status": "active",
+      "createdAt": "2024-04-05T08:00:00.000Z",
+      "updatedAt": "2024-04-25T11:00:00.000Z"
+    },
+    {
+      "id": "task-004",
+      "title": "Update Internal Training Materials",
+      "description": "Revise and update our internal training materials to include the latest process changes.",
+      "userId": "user-126",
+      "imageUrl": "https://example.com/images/training-materials.jpg",
+      "dueDate": "2024-10-20T12:00:00.000Z",
+      "priority": "medium",
+      "tags": ["training", "HR"],
+      "size": "medium",
+      "checklist": [
+        {
+          "id": "chk-008",
+          "text": "Gather updated process info",
+          "isCompleted": true
+        },
+        {
+          "id": "chk-009",
+          "text": "Rewrite training modules",
+          "isCompleted": false
+        }
+      ],
+      "attachments": [
+        {
+          "id": "att-003",
+          "url": "https://example.com/docs/training-updates.pdf",
+          "filename": "training-updates.pdf"
+        }
+      ],
+      "status": "active",
+      "createdAt": "2024-04-05T08:00:00.000Z",
+      "updatedAt": "2024-04-25T11:00:00.000Z"
+    },
+    {
+      "id": "task-004",
+      "title": "Update Internal Training Materials",
+      "description": "Revise and update our internal training materials to include the latest process changes.",
+      "userId": "user-126",
+      "imageUrl": "https://example.com/images/training-materials.jpg",
+      "dueDate": "2024-10-20T12:00:00.000Z",
+      "priority": "small",
+      "tags": ["training", "HR"],
+      "size": "large",
+      "checklist": [
+        {
+          "id": "chk-008",
+          "text": "Gather updated process info",
+          "isCompleted": true
+        },
+        {
+          "id": "chk-009",
+          "text": "Rewrite training modules",
+          "isCompleted": false
+        }
+      ],
+      "attachments": [
+        {
+          "id": "att-003",
+          "url": "https://example.com/docs/training-updates.pdf",
+          "filename": "training-updates.pdf"
+        }
+      ],
+      "status": "active",
+      "createdAt": "2024-04-05T08:00:00.000Z",
+      "updatedAt": "2024-04-25T11:00:00.000Z"
     }
   ]
 }

@@ -5,12 +5,12 @@ export interface Task {
   userId: string;
   imageUrl: string | null;
   dueDate: Date | null;
-  priority: "low" | "medium" | "high";
+  priority: TaskPriority;
   tags?: string[];
   checklist?: ChecklistItem[];
   attachments?: Attachment[];
-  status: "pending" | "in progress" | "completed";
-  size: "small" | "medium" | "large";
+  status: TaskStatus;
+  size: TaskSize;
   createdAt: Date;
   updatedAt: Date | null;
 }
@@ -25,4 +25,22 @@ interface Attachment {
   id: string;
   url: string;
   filename: string;
+}
+
+export enum TaskSize {
+  Small = "small",
+  Medium = "medium",
+  Large = "large",
+}
+
+export enum TaskPriority {
+  Low = "low",
+  Medium = "medium",
+  High = "high",
+}
+
+export enum TaskStatus {
+  Pending = "pending",
+  InProgress = "in progress",
+  Completed = "completed",
 }

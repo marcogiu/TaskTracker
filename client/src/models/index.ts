@@ -1,4 +1,4 @@
-import { User } from "./User";
-import { Task } from "./Task";
-
-export type { User, Task };
+export type { User } from "./User";
+export { TaskSize, TaskPriority, TaskStatus } from "./Task";
+export type { Task } from "./Task";
+export type { CardStyle } from "./CardStyle";

@@ -33,7 +33,7 @@ export const FormNewTask = ({ onAddTask }: IFormNewTaskProps): JSX.Element => {
 
   return (
     <>
-      <Button onClick={onOpen} colorScheme="green">
+      <Button onClick={onOpen} colorScheme="teal">
         Create New Task
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
