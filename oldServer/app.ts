@@ -1,20 +1,24 @@
 import express, { Application, Request, Response } from "express";
-import dotenv from "dotenv";
 import morgan from "morgan";
 import cors from "cors";
-import bodyParser from "body-parser";
-import authRoutes from "./routes/AuthRoute";
+import authRoutes from "./routes/authRoute";
+import { config } from "./config/config";
 
 export function createApp(): Application {
   const app: Application = express();
 
-  dotenv.config();
+  if (config.nodeEnv === "development") {
+    app.use(morgan("dev"));
+  }
 
-  app.use(morgan("dev"));
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(cors());
+  const corsOptions = {
+    origin: config.corsOrigin,
+    optionsSuccessStatus: 200,
+  };
+  app.use(cors(corsOptions));
 
   app.get("/api", (req: Request, res: Response) => {
     res.status(200).json({ message: "TaskTracker Web Service" });

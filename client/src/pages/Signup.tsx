@@ -54,10 +54,11 @@ export const Signup = (): JSX.Element => {
         position: "top",
       });
       navigate("/dashboard");
-    } catch (error: any) {
+    } catch (error) {
+      const regError = error as Error<{message: string}>;
       toast({
         title: "Registration Failed",
-        description: error.data?.message || "Registration failed. Please try again.",
+        description: regError.data?.message || "Registration failed. Please try again.",
         status: "error",
         duration: 5000,
         isClosable: true,
