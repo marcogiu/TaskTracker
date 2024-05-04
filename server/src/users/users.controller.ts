@@ -11,18 +11,21 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from 'src/auth/dto/login.dto';
 
-@Controller('users')
+@Controller('api/users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post('register')
   async createUser(@Body() createUserDto: CreateUserDto) {
-    console.log(createUserDto);
-    const { email, username, password } = createUserDto;
-    return this.usersService.createUser({ username, email, password });
+    const user = await this.usersService.createUser(createUserDto);
+    await this.usersService.sendActivationEmail(
+      user.email,
+      user.activationToken,
+    );
+    return user;
   }
 
-  @Post('login')
+  @Post('auth')
   async loginUser(@Body() loginDto: LoginDto) {
     console.log(loginDto);
     return this.usersService.validateUser(loginDto);

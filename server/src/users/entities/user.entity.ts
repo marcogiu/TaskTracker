@@ -15,7 +15,14 @@ export class User {
   email: string;
 
   @Prop({ required: true })
-  password: string; // Ricorda di memorizzare solo password hashate!
+  password: string;
+
+  // Adding activationToken and isActivated properties
+  @Prop({ required: false })
+  activationToken?: string;
+
+  @Prop({ default: false })
+  isActivated: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

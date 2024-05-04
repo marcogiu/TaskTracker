@@ -9,19 +9,52 @@ import { User, UserDocument } from './entities/user.entity';
 import * as bcrypt from 'bcryptjs';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from 'src/auth/dto/login.dto';
+import { generateActivationToken } from 'utils/utilities';
+import nodemailer from 'nodemailer';
 
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-    const createdUser = new this.userModel({
-      username: createUserDto.username,
-      email: createUserDto.email,
-      password: hashedPassword,
+    const activationToken = generateActivationToken();
+    const user = new this.userModel({
+      ...createUserDto,
+      activationToken,
+      isActivated: false,
     });
-    return createdUser.save();
+
+    await user.save();
+    return user;
+  }
+
+  async sendActivationEmail(
+    email: string,
+    activationToken: string,
+  ): Promise<void> {
+    const transporter = nodemailer.createTransport({
+      host: 'live.smtp.mailtrap.io',
+      port: 587,
+      auth: {
+        user: 'api',
+        pass: 'e21ccbb02f8bdfa15032ffd278293e89',
+      },
+    });
+
+    const mailOptions = {
+      from: 'no-reply@yourdomain.com',
+      to: email,
+      subject: 'Activate Your Account',
+      html: `Please click on the following link to activate your account: <a href="http://yourdomain.com/activate/${activationToken}">Activate Account</a>`,
+    };
+
+    try {
+      const info = await transporter.sendMail(mailOptions);
+      console.log('Activation email sent:', info.response);
+    } catch (error) {
+      console.error('Error sending activation email:', error);
+      throw error; // Re-throw if you need to handle this error further up in your application
+    }
   }
 
   async findAll(): Promise<User[]> {
@@ -41,8 +74,6 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
-    // Apply the updates from DTO
-    user.username = updateUserDto.username;
     user.email = updateUserDto.email;
     if (updateUserDto.password) {
       user.password = await bcrypt.hash(updateUserDto.password, 10);
@@ -58,22 +89,22 @@ export class UsersService {
   }
 
   async validateUser(loginDto: LoginDto): Promise<User> {
-    const { password, username } = loginDto;
-    const user = await this.findByUsername(username);
+    const { password, email } = loginDto;
+    const user = await this.findByEmail(email);
     if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('User not found');
     }
 
     const passwordsMatch = await this.checkPassword(password, user.password);
     if (!passwordsMatch) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Password not valid');
     }
 
     return user;
   }
 
-  async findByUsername(username: string): Promise<User | undefined> {
-    return this.userModel.findOne({ username }).exec();
+  async findByEmail(email: string): Promise<User | undefined> {
+    return this.userModel.findOne({ email }).exec();
   }
 
   async checkPassword(

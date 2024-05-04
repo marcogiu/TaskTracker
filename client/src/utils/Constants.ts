@@ -16,3 +16,9 @@ export const EmptyTask: Model.Task = {
   updatedAt: null,
   size: "small",
 };
+
+export const initialUserState: Model.User = {
+  email: "",
+  password: "",
+  username: "",
+};

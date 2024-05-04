@@ -16,35 +16,50 @@ import {
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { motion } from "framer-motion";
-import { useRegisterMutation } from "../store/userSlice";
+import { useRegisterMutation } from "../features/user/userSlice";
 import { User } from "../models";
-import { v4 as uuidv4 } from "uuid";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../features/auth/authSlice";
+import * as Constants from "../utils/Constants";
 
 const MotionBox = motion(Box);
 
 interface ErrorResponse {
   data?: {
+    status?: string;
     message?: string;
+    errors?: Array<{ field: string; message: string }>;
   };
   message?: string;
 }
 
+interface PasswordState {
+  confirmPassword: string;
+  showPassword: boolean;
+  showConfirmPassword: boolean;
+}
+
 export const Signup = (): JSX.Element => {
-  const [formData, setFormData] = useState<User>({
-    id: uuidv4(),
-    username: "",
-    email: "",
-    password: "",
+  const [formData, setFormData] = useState<User>(Constants.initialUserState);
+  const [passwordState, setPasswordState] = useState<PasswordState>({
+    confirmPassword: "",
+    showPassword: false,
+    showConfirmPassword: false,
   });
-  const [confirmPassword, setConfirmPassoword] = useState<string>("");
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [showConfirmPassword, setShowConfirmPassword] =
-    useState<boolean>(false);
   const navigate = useNavigate();
   const toast = useToast();
   const [register, { isLoading }] = useRegisterMutation();
   const bg = useColorModeValue("white", "gray.700");
+  const dispatch = useDispatch();
 
+  const { confirmPassword, showPassword, showConfirmPassword } = passwordState;
+
+  const updatePasswordState = (
+    field: keyof PasswordState,
+    value: boolean | string
+  ) => {
+    setPasswordState((prevState) => ({ ...prevState, [field]: value }));
+  };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -64,7 +79,8 @@ export const Signup = (): JSX.Element => {
     }
 
     try {
-      await register(formData).unwrap();
+      const user = await register(formData).unwrap();
+      dispatch(setCredentials(user));
       toast({
         title: "Registration Successful",
         description: "You have successfully registered.",
@@ -74,12 +90,21 @@ export const Signup = (): JSX.Element => {
         position: "top",
       });
       navigate("/dashboard");
-    } catch (error: unknown) {
-      const typedError = error as ErrorResponse;
+    } catch (error) {
+      const responseError = error as ErrorResponse;
+      let errorMessage =
+        responseError?.message || "Registration failed. Please try again.";
+
+      if (responseError?.data?.errors) {
+        const errorMessages = responseError.data.errors
+          .map((err) => `${err.field}: ${err.message}`)
+          .join(", ");
+        errorMessage = errorMessages || errorMessage;
+      }
+
       toast({
         title: "Registration Failed",
-        description:
-          typedError?.data?.message || "Registration failed. Please try again.",
+        description: errorMessage,
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -99,8 +124,7 @@ export const Signup = (): JSX.Element => {
         bg="white"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
+        transition={{ duration: 0.5 }}>
         <Heading as="h2" size="xl" textAlign="center" mb={6} color="teal.600">
           Registration
         </Heading>
@@ -138,7 +162,9 @@ export const Signup = (): JSX.Element => {
               <InputRightElement>
                 <IconButton
                   icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
-                  onClick={() => setShowPassword(!showPassword)}
+                  onClick={() =>
+                    updatePasswordState("showPassword", !showPassword)
+                  }
                   aria-label={showPassword ? "Hide password" : "Show password"}
                   size="sm"
                   variant="unstyled"
@@ -153,12 +179,19 @@ export const Signup = (): JSX.Element => {
                 type={showConfirmPassword ? "text" : "password"}
                 placeholder="Confirm Password"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassoword(e.target.value)}
+                onChange={(e) =>
+                  updatePasswordState("confirmPassword", e.target.value)
+                }
               />
               <InputRightElement>
                 <IconButton
                   icon={showConfirmPassword ? <ViewOffIcon /> : <ViewIcon />}
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  onClick={() =>
+                    updatePasswordState(
+                      "showConfirmPassword",
+                      !showConfirmPassword
+                    )
+                  }
                   aria-label={
                     showConfirmPassword ? "Hide password" : "Show password"
                   }
@@ -175,8 +208,7 @@ export const Signup = (): JSX.Element => {
             isLoading={isLoading}
             loadingText="Registering..."
             _hover={{ transform: "scale(1.05)" }}
-            _active={{ transform: "scale(0.95)" }}
-          >
+            _active={{ transform: "scale(0.95)" }}>
             Register
           </Button>
         </form>

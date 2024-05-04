@@ -1,16 +1,16 @@
-import { api } from "./apiSlice";
+import { apiService } from "../../service/apiService";
 
-interface LoginData {
+interface Data {
   email: string;
   password: string;
 }
 
-const USERS_URL = "users"; // Simplified path, assuming base URL includes `/api`
+const USERS_URL = "/api/users";
 
-export const userSlice = api.injectEndpoints({
+export const userSlice = apiService.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation({
-      query: (data: LoginData) => ({
+      query: (data: Data) => ({
         url: `${USERS_URL}/auth`,
         method: "POST",
         body: data,
@@ -18,7 +18,7 @@ export const userSlice = api.injectEndpoints({
     }),
 
     register: builder.mutation({
-      query: (data) => ({
+      query: (data: Data) => ({
         url: `${USERS_URL}/register`,
         method: "POST",
         body: data,
@@ -27,7 +27,7 @@ export const userSlice = api.injectEndpoints({
 
     updateUser: builder.mutation({
       query: ({ id, ...data }) => ({
-        url: `${USERS_URL}/${id}`, // Assuming you need to specify user ID
+        url: `${USERS_URL}/${id}`,
         method: "PATCH",
         body: data,
       }),
@@ -35,7 +35,7 @@ export const userSlice = api.injectEndpoints({
 
     deleteUser: builder.mutation({
       query: (id) => ({
-        url: `${USERS_URL}/${id}`, // Assuming you need to specify user ID
+        url: `${USERS_URL}/${id}`,
         method: "DELETE",
       }),
     }),
