@@ -7,14 +7,14 @@ export const EmptyTask: Model.Task = {
   userId: "",
   imageUrl: null,
   dueDate: null,
-  priority: "low",
+  priority: Model.TaskPriority.Low,
   tags: [],
   checklist: [],
   attachments: [],
-  status: "pending",
+  status: Model.TaskStatus.Pending,
+  size: Model.TaskSize.Small,
   createdAt: new Date(),
   updatedAt: null,
-  size: "small",
 };
 
 export const initialUserState: Model.User = {
