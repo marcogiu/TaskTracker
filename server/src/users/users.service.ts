@@ -10,7 +10,7 @@ import * as bcrypt from 'bcryptjs';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from 'src/auth/dto/login.dto';
 import { generateActivationToken } from 'utils/utilities';
-import nodemailer from 'nodemailer';
+import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class UsersService {
@@ -42,7 +42,7 @@ export class UsersService {
     });
 
     const mailOptions = {
-      from: 'no-reply@yourdomain.com',
+      from: 'gnagni.mg@gmail.com',
       to: email,
       subject: 'Activate Your Account',
       html: `Please click on the following link to activate your account: <a href="http://yourdomain.com/activate/${activationToken}">Activate Account</a>`,
