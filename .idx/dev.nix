@@ -43,7 +43,7 @@
         npmInstall = "bash -c 'cd client && npm install && cd ../server && npm install'";
       };
       onStart = {
-        watch-backend = "bash -c 'cd server && npm run start'"; # Comando per avviare il monitoraggio del backend
+        watch-backend = "bash -c 'cd server && npm run start:dev'"; # Comando per avviare il monitoraggio del backend
         watch-frontend = "bash -c 'cd client && npm run dev'"; # Comando per avviare il frontend
       };
     };
