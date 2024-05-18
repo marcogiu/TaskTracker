@@ -6,12 +6,13 @@ interface Data {
 }
 
 const USERS_URL = "/api/users";
+const AUTH_URL = "/api/auth";
 
 export const userSlice = apiService.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (data: Data) => ({
-        url: `${USERS_URL}/auth`,
+        url: `${AUTH_URL}/login`,
         method: "POST",
         body: data,
       }),
@@ -19,7 +20,7 @@ export const userSlice = apiService.injectEndpoints({
 
     register: builder.mutation({
       query: (data: Data) => ({
-        url: `${USERS_URL}/register`,
+        url: `${AUTH_URL}/register`,
         method: "POST",
         body: data,
       }),

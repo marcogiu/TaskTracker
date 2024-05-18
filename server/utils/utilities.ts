@@ -1,5 +1,4 @@
 import { env } from 'process';
-import { v4 as uuidv4 } from 'uuid';
 
 export const getEnvironmentVariable = (
   key: string,
@@ -15,8 +14,4 @@ export const getEnvironmentVariable = (
   throw new Error(
     `Environment variable ${key} is not set and no default value was provided.`,
   );
-};
-
-export const generateActivationToken = (): string => {
-  return uuidv4();
 };

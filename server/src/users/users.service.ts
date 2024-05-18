@@ -9,52 +9,14 @@ import { User, UserDocument } from './entities/user.entity';
 import * as bcrypt from 'bcryptjs';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from 'src/auth/dto/login.dto';
-import { generateActivationToken } from 'utils/utilities';
-import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(@InjectModel(User.name) public userModel: Model<UserDocument>) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const activationToken = generateActivationToken();
-    const user = new this.userModel({
-      ...createUserDto,
-      activationToken,
-      isActivated: false,
-    });
-
-    await user.save();
-    return user;
-  }
-
-  async sendActivationEmail(
-    email: string,
-    activationToken: string,
-  ): Promise<void> {
-    const transporter = nodemailer.createTransport({
-      host: 'live.smtp.mailtrap.io',
-      port: 587,
-      auth: {
-        user: 'api',
-        pass: 'e21ccbb02f8bdfa15032ffd278293e89',
-      },
-    });
-
-    const mailOptions = {
-      from: 'gnagni.mg@gmail.com',
-      to: email,
-      subject: 'Activate Your Account',
-      html: `Please click on the following link to activate your account: <a href="http://yourdomain.com/activate/${activationToken}">Activate Account</a>`,
-    };
-
-    try {
-      const info = await transporter.sendMail(mailOptions);
-      console.log('Activation email sent:', info.response);
-    } catch (error) {
-      console.error('Error sending activation email:', error);
-      throw error; // Re-throw if you need to handle this error further up in your application
-    }
+    const user = new this.userModel(createUserDto);
+    return user.save();
   }
 
   async findAll(): Promise<User[]> {

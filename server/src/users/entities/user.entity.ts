@@ -3,11 +3,8 @@ import { Document, Types } from 'mongoose';
 
 export type UserDocument = User & Document;
 
-@Schema()
+@Schema({ timestamps: true })
 export class User {
-  @Prop({ type: Types.ObjectId, required: true, auto: true })
-  id: Types.ObjectId;
-
   @Prop({ required: true, unique: true })
   username: string;
 
@@ -17,12 +14,8 @@ export class User {
   @Prop({ required: true })
   password: string;
 
-  // Adding activationToken and isActivated properties
-  @Prop({ required: false })
-  activationToken?: string;
-
-  @Prop({ default: false })
-  isActivated: boolean;
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Task' }] })
+  tasks: Types.ObjectId[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

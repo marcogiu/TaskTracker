@@ -1,7 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "https://tasktracker-server.vercel.app",
+  // baseUrl: "https://tasktracker-server.vercel.app",
+  baseUrl: "http://localhost:3000",
   prepareHeaders: (headers) => {
     const userInfoString = localStorage.getItem("userInfo");
     if (userInfoString) {
