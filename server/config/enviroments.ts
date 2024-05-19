@@ -1,7 +1,12 @@
 import { config } from 'dotenv';
 import { getEnvironmentVariable } from 'utils/utilities';
 
-config();
+let envPath = './.env.development';
+if (process.env.NODE_ENV === 'production') {
+  envPath = './.env.production';
+}
+
+config({ path: envPath });
 
 interface Environments {
   nodeEnv: string;

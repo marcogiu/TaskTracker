@@ -18,7 +18,6 @@ const PrivateRoute = () => {
 };
 
 export const App = () => {
-  console.log(import.meta.env.BASE_URL);
   return (
     <Provider store={store}>
       <BrowserRouter>
