@@ -97,7 +97,8 @@ export const Login = (): JSX.Element => {
         boxShadow="dark-lg"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}>
+        transition={{ duration: 0.5 }}
+      >
         <Heading as="h2" size="xl" textAlign="center" mb={6} color="teal.600">
           Login
         </Heading>
@@ -140,7 +141,8 @@ export const Login = (): JSX.Element => {
             isLoading={isLoading}
             loadingText="Logging In..."
             _hover={{ transform: "scale(1.05)" }}
-            _active={{ transform: "scale(0.95)" }}>
+            _active={{ transform: "scale(0.95)" }}
+          >
             Login
           </Button>
         </form>

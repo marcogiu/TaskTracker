@@ -1,18 +1,25 @@
-import { useEffect, useState } from "react";
-import { VStack, Text, Grid, Flex } from "@chakra-ui/react";
-import { FormNewTask, TaskCard } from "../components";
-import * as Model from "../models";
-import * as Utilities from "../utils/Utilities";
-import data from "../../dataTest.json"; // I dati sono già importati qui
+import { useEffect, useState } from 'react';
+import { VStack, Text, Grid, Flex, Box, Avatar, Heading } from '@chakra-ui/react';
+import { Calendar, FormNewTask, TaskCard } from '../components';
+import * as Model from '../models';
+import * as Utilities from '../utils/Utilities';
+import data from '../../dataTest.json';
+import dayjs from 'dayjs';
+
+// Mock user data
+const user = {
+  name: 'John Doe',
+  avatar: 'https://via.placeholder.com/150',
+  isFirstLogin: false
+};
 
 export const Dashboard = () => {
   const [tasks, setTasks] = useState<Model.Task[]>([]);
+  // const [date, setDate] = useState(new Date());
 
   const addTask = (task: Model.Task) => {
     setTasks([...tasks, task]);
   };
-
-  console.log(tasks);
 
   useEffect(() => {
     const tasksWithDates = data.tasks.map((task) => ({
@@ -22,24 +29,44 @@ export const Dashboard = () => {
       updatedAt: task.updatedAt ? new Date(task.updatedAt) : null,
       size: Utilities.getTaskSize(task.size),
       status: Utilities.getTaskStatus(task.status),
-      priority: Utilities.getTaskPriority(task.priority),
+      priority: Utilities.getTaskPriority(task.priority)
     }));
     setTasks(tasksWithDates);
   }, []);
 
   return (
-    <VStack spacing={4} align="stretch" w="90%" margin="auto">
-      <Flex justifyContent="space-between" alignItems="center">
-        <Text fontSize="2xl" fontWeight="bold" color="teal.700">
-          Your Tasks
-        </Text>
+    <Grid templateRows='auto 1fr' h='100vh' p={5} overflow='hidden'>
+      <Flex justifyContent='space-between' alignItems='center' mb={5}>
+        <Flex alignItems='center'>
+          <Avatar src={user.avatar} size='lg' mr={4} />
+          <Box>
+            <Heading as='h2' size='lg'>
+              {user.isFirstLogin ? 'Benvenuto' : 'Bentornato'}, {user.name}!
+            </Heading>
+            <Text fontSize='md' color='gray.600'>
+              {dayjs().format('DD MMMM YYYY')}
+            </Text>
+          </Box>
+        </Flex>
         <FormNewTask onAddTask={addTask} />
       </Flex>
-      <Grid templateColumns="repeat(10, 1fr)" gap={6}>
-        {tasks.map((task, index) => (
-          <TaskCard task={task} key={index} />
-        ))}
+      <Grid templateColumns='1fr 1fr' gap={6} h='full'>
+        <Box overflow='auto' h='full' pr={4}>
+          <Text fontSize='2xl' fontWeight='bold' color='teal.700' mb={4}>
+            Eventi del giorno
+          </Text>
+          <VStack spacing={4} align='stretch'>
+            {tasks.map((task, index) => (
+              <TaskCard task={task} key={index} />
+            ))}
+          </VStack>
+        </Box>
+        <Box>
+          <Calendar />
+        </Box>
       </Grid>
-    </VStack>
+    </Grid>
   );
 };
+
+export default Dashboard;
