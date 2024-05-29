@@ -4,8 +4,6 @@ import { environments } from 'config/enviroments';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
-console.log('CORS Origin set to:', environments.corsOrigin);
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 

@@ -9,11 +9,11 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
-    const token = await this.authService.login(loginDto);
-    if (!token) {
+    const userInfo = await this.authService.login(loginDto);
+    if (!userInfo) {
       return { message: 'Invalid credentials' };
     }
-    return token;
+    return { token: userInfo.access_token, id: userInfo.user._id };
   }
 
   @Post('register')

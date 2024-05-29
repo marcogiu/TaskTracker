@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react';
-import { VStack, Text, Grid, Flex, Box, Avatar, Heading } from '@chakra-ui/react';
-import { Calendar, FormNewTask, TaskCard } from '../components';
+import { Grid, Spinner, Alert, AlertIcon } from '@chakra-ui/react';
+import { Calendar } from '../components';
 import * as Model from '../models';
 import * as Utilities from '../utils/Utilities';
 import data from '../../dataTest.json';
-import dayjs from 'dayjs';
-
-// Mock user data
-const user = {
-  name: 'John Doe',
-  avatar: 'https://via.placeholder.com/150',
-  isFirstLogin: false
-};
+import { TaskSection } from '../components/TaskSection';
+import { Summary } from '../components/Summary';
+import { useGetUserFromIdQuery } from '../features/user/userSlice';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 
 export const Dashboard = () => {
   const [tasks, setTasks] = useState<Model.Task[]>([]);
-  // const [date, setDate] = useState(new Date());
+
+  const { userInfo } = useSelector((state: RootState) => state.auth);
+
+  const { data: userData, error, isLoading } = useGetUserFromIdQuery(userInfo?.id || '');
 
   const addTask = (task: Model.Task) => {
     setTasks([...tasks, task]);
@@ -34,36 +34,25 @@ export const Dashboard = () => {
     setTasks(tasksWithDates);
   }, []);
 
+  if (isLoading) {
+    return <Spinner size='xl' />;
+  }
+
+  if (error) {
+    return (
+      <Alert status='error'>
+        <AlertIcon />
+        There was an error processing your request
+      </Alert>
+    );
+  }
+
   return (
     <Grid templateRows='auto 1fr' h='100vh' p={5} overflow='hidden'>
-      <Flex justifyContent='space-between' alignItems='center' mb={5}>
-        <Flex alignItems='center'>
-          <Avatar src={user.avatar} size='lg' mr={4} />
-          <Box>
-            <Heading as='h2' size='lg'>
-              {user.isFirstLogin ? 'Benvenuto' : 'Bentornato'}, {user.name}!
-            </Heading>
-            <Text fontSize='md' color='gray.600'>
-              {dayjs().format('DD MMMM YYYY')}
-            </Text>
-          </Box>
-        </Flex>
-        <FormNewTask onAddTask={addTask} />
-      </Flex>
-      <Grid templateColumns='1fr 1fr' gap={6} h='full'>
-        <Box overflow='auto' h='full' pr={4}>
-          <Text fontSize='2xl' fontWeight='bold' color='teal.700' mb={4}>
-            Eventi del giorno
-          </Text>
-          <VStack spacing={4} align='stretch'>
-            {tasks.map((task, index) => (
-              <TaskCard task={task} key={index} />
-            ))}
-          </VStack>
-        </Box>
-        <Box>
-          <Calendar />
-        </Box>
+      <Summary addTask={addTask} user={userData} />
+      <Grid templateColumns='repeat(2, 1fr)' gap={6} h='full'>
+        <TaskSection tasks={tasks} />
+        <Calendar />
       </Grid>
     </Grid>
   );

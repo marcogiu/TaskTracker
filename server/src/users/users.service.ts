@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { User, UserDocument } from './entities/user.entity';
 import * as bcrypt from 'bcryptjs';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -12,7 +12,10 @@ import { LoginDto } from 'src/auth/dto/login.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) public userModel: Model<UserDocument>) {}
+  constructor(
+    @InjectModel(User.name)
+    public userModel: Model<UserDocument>,
+  ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     const user = new this.userModel(createUserDto);
@@ -24,7 +27,9 @@ export class UsersService {
   }
 
   async findById(id: string): Promise<User> {
-    const user = await this.userModel.findById(id).exec();
+    const objectId = new Types.ObjectId(id);
+    const user = await this.userModel.findById(objectId).exec();
+    console.log(`Found user: ${user}`);
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
