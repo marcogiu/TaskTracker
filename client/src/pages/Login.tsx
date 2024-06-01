@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useToast, Flex, Box, FormControl, FormLabel, Input, Button, Heading, InputGroup, InputRightElement, IconButton, useColorModeValue } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { motion } from 'framer-motion';
-import { useLoginMutation } from '../features/user/userSlice';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../features/auth/authSlice';
 import * as Model from '../models';
+import { LoginResponse, useLoginMutation } from '../features/user/userSlice';
 
 const MotionBox = motion(Box);
 
@@ -39,8 +39,17 @@ export const Login = (): JSX.Element => {
     }
 
     try {
-      const user = await login(formData).unwrap();
-      dispatch(loginSuccess(user));
+      const result = await login(formData).unwrap();
+      console.log('result', result);
+
+      const userData: LoginResponse = {
+        token: result.token,
+        _id: result._id
+      };
+
+      console.log(userData);
+
+      dispatch(loginSuccess(userData));
       toast({
         title: 'Login Successful',
         description: 'You have successfully logged in.',

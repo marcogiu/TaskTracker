@@ -1,4 +1,10 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -11,13 +17,20 @@ export class AuthController {
   async login(@Body() loginDto: LoginDto) {
     const userInfo = await this.authService.login(loginDto);
     if (!userInfo) {
-      return { message: 'Invalid credentials' };
+      throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     }
-    return { token: userInfo.access_token, id: userInfo.user._id };
+    return {
+      token: userInfo.access_token,
+      user: userInfo.user,
+    };
   }
 
   @Post('register')
   async register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto);
+    const user = await this.authService.register(registerDto);
+    return {
+      message: 'User registered successfully',
+      user: user,
+    };
   }
 }

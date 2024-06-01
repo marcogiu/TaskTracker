@@ -5,21 +5,28 @@ import * as Model from '../models';
 import * as Utilities from '../utils/Utilities';
 import data from '../../dataTest.json';
 import { TaskSection } from '../components/TaskSection';
-import { Summary } from '../components/Summary';
-import { useGetUserFromIdQuery } from '../features/user/userSlice';
+// import { Summary } from '../components/Summary';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
+import { useGetUserFromIdQuery } from '../features/user/userSlice';
 
 export const Dashboard = () => {
   const [tasks, setTasks] = useState<Model.Task[]>([]);
 
-  const { userInfo } = useSelector((state: RootState) => state.auth);
+  const user = useSelector((state: RootState) => state.auth.userInfo);
+  console.log(user);
 
-  const { data: userData, error, isLoading } = useGetUserFromIdQuery(userInfo?.id || '');
+  const {
+    // data: userData,
+    error,
+    isLoading
+  } = useGetUserFromIdQuery(user._id, {
+    skip: !user
+  });
 
-  const addTask = (task: Model.Task) => {
-    setTasks([...tasks, task]);
-  };
+  // const addTask = (task: Model.Task) => {
+  //   setTasks([...tasks, task]);
+  // };
 
   useEffect(() => {
     const tasksWithDates = data.tasks.map((task) => ({
@@ -49,7 +56,7 @@ export const Dashboard = () => {
 
   return (
     <Grid templateRows='auto 1fr' h='100vh' p={5} overflow='hidden'>
-      <Summary addTask={addTask} user={userData} />
+      {/* <Summary addTask={addTask} user={userData} /> */}
       <Grid templateColumns='repeat(2, 1fr)' gap={6} h='full'>
         <TaskSection tasks={tasks} />
         <Calendar />

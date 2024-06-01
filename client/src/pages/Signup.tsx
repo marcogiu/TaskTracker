@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { useToast, Flex, Box, FormControl, FormLabel, Input, Button, Heading, InputGroup, InputRightElement, IconButton, useColorModeValue } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { motion } from 'framer-motion';
-import { useRegisterMutation } from '../features/user/userSlice';
 import { User } from '../models';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../features/auth/authSlice';
 import * as Constants from '../utils/Constants';
+import { useRegisterMutation } from '../features/user/userSlice';
 
 const MotionBox = motion(Box);
 
@@ -63,8 +63,8 @@ export const Signup = (): JSX.Element => {
     }
 
     try {
-      const user = await register(formData).unwrap();
-      dispatch(loginSuccess(user));
+      const result = await register(formData).unwrap();
+      dispatch(loginSuccess(result));
       toast({
         title: 'Registration Successful',
         description: 'You have successfully registered.',

@@ -5,11 +5,9 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
   prepareHeaders: (headers) => {
-    const userInfoString = localStorage.getItem('userInfo');
-    if (userInfoString) {
-      const userInfo = JSON.parse(userInfoString);
-      const token = userInfo.token;
-
+    const userInfo = localStorage.getItem('userInfo');
+    if (userInfo) {
+      const { token } = JSON.parse(userInfo);
       if (token) {
         headers.set('Authorization', `Bearer ${token}`);
       }

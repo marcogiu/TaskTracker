@@ -18,4 +18,4 @@ export class User {
   tasks: Types.ObjectId[];
 }
 
-export const UserDocument = SchemaFactory.createForClass(User);
+export const UserSchema = SchemaFactory.createForClass(User);

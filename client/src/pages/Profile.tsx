@@ -3,12 +3,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../features/auth/authSlice';
 import { RootState } from '../store';
-import { useGetUserFromIdQuery } from '../features/user/userSlice';
 import { useState, useEffect } from 'react';
+import { useGetUserFromIdQuery, useUpdateUserMutation, useDeleteUserMutation } from '../features/user/userSlice';
 
 export const Profile = (): JSX.Element => {
-  const { userInfo } = useSelector((state: RootState) => state.auth);
-  const { data: userData, error, isLoading } = useGetUserFromIdQuery(userInfo?.id || '');
+  const {
+    userInfo: { user }
+  } = useSelector((state: RootState) => state.auth);
+  const { data: userData, error, isLoading } = useGetUserFromIdQuery(user._id);
+  const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
+  const [deleteUser] = useDeleteUserMutation();
   const [localUserData, setLocalUserData] = useState({ email: '', username: '' });
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -23,33 +27,59 @@ export const Profile = (): JSX.Element => {
     }
   }, [userData]);
 
-  const handleUpdate = () => {
-    // Logica per l'aggiornamento dei dati utente
-    toast({
-      title: 'Profilo aggiornato',
-      description: 'I tuoi dati sono stati aggiornati con successo.',
-      status: 'success',
-      colorScheme: 'teal',
-      duration: 5000,
-      isClosable: true,
-      position: 'top'
-    });
+  const handleUpdate = async () => {
+    try {
+      await updateUser({ id: user._id, data: localUserData }).unwrap();
+      toast({
+        title: 'Profilo aggiornato',
+        description: 'I tuoi dati sono stati aggiornati con successo.',
+        status: 'success',
+        colorScheme: 'teal',
+        duration: 5000,
+        isClosable: true,
+        position: 'top'
+      });
+    } catch (err) {
+      toast({
+        title: 'Errore',
+        description: "Si è verificato un errore durante l'aggiornamento dei dati.",
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+        position: 'top'
+      });
+    }
   };
 
-  const handleDeleteAccount = () => {
-    // Logica per la cancellazione dell'account
-    toast({
-      title: 'Account eliminato',
-      description: 'Il tuo account è stato eliminato con successo.',
-      status: 'warning',
-      duration: 5000,
-      isClosable: true,
-      position: 'top'
-    });
+  const handleDeleteAccount = async () => {
+    try {
+      await deleteUser(user._id).unwrap();
+      dispatch(logout(user));
+      localStorage.removeItem('userInfo');
+      navigate('/login');
+      toast({
+        title: 'Account eliminato',
+        description: 'Il tuo account è stato eliminato con successo.',
+        status: 'warning',
+        duration: 5000,
+        isClosable: true,
+        position: 'top'
+      });
+    } catch (err) {
+      toast({
+        title: 'Errore',
+        description: "Si è verificato un errore durante l'eliminazione dell'account.",
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+        position: 'top'
+      });
+    }
   };
 
   const handleLogout = () => {
-    dispatch(logout(userInfo));
+    dispatch(logout(user));
+    localStorage.removeItem('userInfo');
     navigate('/login');
     toast({
       title: 'Logout effettuato',
@@ -71,6 +101,7 @@ export const Profile = (): JSX.Element => {
 
   return (
     <Box p={5} shadow='md' borderWidth='1px' flex='1' borderRadius='md'>
+      <Button onClick={() => navigate('/dashboard')}>Torna alla dashboard</Button>
       <FormControl id='email' isRequired>
         <FormLabel>Email</FormLabel>
         <Input type='email' value={localUserData.email} onChange={(e) => setLocalUserData({ ...localUserData, email: e.target.value })} />
@@ -79,7 +110,7 @@ export const Profile = (): JSX.Element => {
         <FormLabel>Username</FormLabel>
         <Input type='text' value={localUserData.username} onChange={(e) => setLocalUserData({ ...localUserData, username: e.target.value })} />
       </FormControl>
-      <Button mt={4} colorScheme='blue' onClick={handleUpdate}>
+      <Button mt={4} colorScheme='blue' onClick={handleUpdate} isLoading={isUpdating}>
         Aggiorna Profilo
       </Button>
       <Button mt={4} colorScheme='red' onClick={handleDeleteAccount}>

@@ -1,83 +1,64 @@
 import {
   Injectable,
   NotFoundException,
-  UnauthorizedException,
+  BadRequestException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
-import { User, UserDocument } from './entities/user.entity';
-import * as bcrypt from 'bcryptjs';
+import { Model } from 'mongoose';
+import { UpdateUserDto } from './dto/update-user.dto';
+import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
-import { LoginDto } from 'src/auth/dto/login.dto';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectModel(User.name)
-    public userModel: Model<UserDocument>,
-  ) {}
-
-  async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const user = new this.userModel(createUserDto);
-    return user.save();
-  }
-
-  async findAll(): Promise<User[]> {
-    return this.userModel.find().exec();
-  }
+  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async findById(id: string): Promise<User> {
-    const objectId = new Types.ObjectId(id);
-    const user = await this.userModel.findById(objectId).exec();
-    console.log(`Found user: ${user}`);
+    const user = await this.userModel.findById(id).exec();
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
     return user;
   }
 
-  async updateUser(id: string, updateUserDto: CreateUserDto): Promise<User> {
+  async findByEmail(email: string): Promise<User> {
+    const user = await this.userModel.findOne({ email }).exec();
+    if (!user) {
+      throw new NotFoundException(`User with email ${email} not found`);
+    }
+    return user;
+  }
+
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const newUser = new this.userModel(createUserDto);
+    return newUser.save();
+  }
+
+  async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.userModel.findById(id);
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
-    user.email = updateUserDto.email;
+
+    // Update username if provided
+    if (updateUserDto.username) {
+      user.username = updateUserDto.username;
+    }
+
+    // Update email if provided
+    if (updateUserDto.email) {
+      user.email = updateUserDto.email;
+    }
+
+    // Update password if provided and confirmed
     if (updateUserDto.password) {
+      if (updateUserDto.password !== updateUserDto.confirmPassword) {
+        throw new BadRequestException('Passwords do not match');
+      }
       user.password = await bcrypt.hash(updateUserDto.password, 10);
     }
+
     return user.save();
-  }
-
-  async deleteUser(id: string): Promise<void> {
-    const result = await this.userModel.deleteOne({ _id: id }).exec();
-    if (result.deletedCount === 0) {
-      throw new NotFoundException(`User with ID ${id} not found`);
-    }
-  }
-
-  async validateUser(loginDto: LoginDto): Promise<User> {
-    const { password, email } = loginDto;
-    const user = await this.findByEmail(email);
-    if (!user) {
-      throw new UnauthorizedException('User not found');
-    }
-
-    const passwordsMatch = await this.checkPassword(password, user.password);
-    if (!passwordsMatch) {
-      throw new UnauthorizedException('Password not valid');
-    }
-
-    return user;
-  }
-
-  async findByEmail(email: string): Promise<User | undefined> {
-    return this.userModel.findOne({ email }).exec();
-  }
-
-  async checkPassword(
-    enteredPassword: string,
-    storedPassword: string,
-  ): Promise<boolean> {
-    return bcrypt.compare(enteredPassword, storedPassword);
   }
 }
