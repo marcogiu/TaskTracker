@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -12,7 +13,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, pass: string): Promise<any> {
+  async validateUser(email: string, pass: string): Promise<User | null> {
     const user = await this.usersService.findByEmail(email);
     if (user && (await bcrypt.compare(pass, user.password))) {
       return user;
@@ -27,13 +28,11 @@ export class AuthService {
     }
 
     const payload = { email: user.email, sub: user._id };
-    console.log(payload);
 
     return {
       access_token: this.jwtService.sign(payload),
       user: {
         id: user._id,
-        email: user.email,
       },
     };
   }
@@ -44,6 +43,14 @@ export class AuthService {
       ...registerDto,
       password: hashedPassword,
     });
-    return user;
+
+    const payload = { email: user.email, sub: user._id };
+
+    return {
+      access_token: this.jwtService.sign(payload),
+      user: {
+        id: user._id,
+      },
+    };
   }
 }

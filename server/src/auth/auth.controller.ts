@@ -21,7 +21,7 @@ export class AuthController {
     }
     return {
       token: userInfo.access_token,
-      user: userInfo.user,
+      _id: userInfo.user.id,
     };
   }
 

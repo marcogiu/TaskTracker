@@ -21,13 +21,14 @@ export interface LoginResponse {
   _id: string;
 }
 
-interface RegisterResponse {
+export interface RegisterResponse {
   message: string;
-  user: User;
-}
-
-interface GetUserResponse {
-  user: User;
+  user: {
+    access_token: string;
+    user: {
+      id: string;
+    };
+  };
 }
 
 interface UpdateUserResponse {
@@ -59,7 +60,7 @@ export const userSlice = apiService.injectEndpoints({
       })
     }),
 
-    getUserFromId: builder.query<GetUserResponse, string>({
+    getUserFromId: builder.query<User, string>({
       query: (id) => ({
         url: `${USERS_URL}/${id}`,
         method: 'GET'

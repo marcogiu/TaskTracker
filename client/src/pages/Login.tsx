@@ -47,8 +47,6 @@ export const Login = (): JSX.Element => {
         _id: result._id
       };
 
-      console.log(userData);
-
       dispatch(loginSuccess(userData));
       toast({
         title: 'Login Successful',

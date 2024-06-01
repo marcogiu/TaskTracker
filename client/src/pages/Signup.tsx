@@ -7,7 +7,7 @@ import { User } from '../models';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../features/auth/authSlice';
 import * as Constants from '../utils/Constants';
-import { useRegisterMutation } from '../features/user/userSlice';
+import { LoginResponse, useRegisterMutation } from '../features/user/userSlice';
 
 const MotionBox = motion(Box);
 
@@ -35,7 +35,7 @@ export const Signup = (): JSX.Element => {
   });
   const navigate = useNavigate();
   const toast = useToast();
-  const [register, { isLoading }] = useRegisterMutation();
+  const [register, { isLoading: isRegisterLoading }] = useRegisterMutation();
   const bg = useColorModeValue('white', 'gray.700');
   const dispatch = useDispatch();
 
@@ -44,6 +44,7 @@ export const Signup = (): JSX.Element => {
   const updatePasswordState = (field: keyof PasswordState, value: boolean | string) => {
     setPasswordState((prevState) => ({ ...prevState, [field]: value }));
   };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -63,8 +64,7 @@ export const Signup = (): JSX.Element => {
     }
 
     try {
-      const result = await register(formData).unwrap();
-      dispatch(loginSuccess(result));
+      const response = await register(formData).unwrap();
       toast({
         title: 'Registration Successful',
         description: 'You have successfully registered.',
@@ -73,6 +73,15 @@ export const Signup = (): JSX.Element => {
         isClosable: true,
         position: 'top'
       });
+
+      console.log(response);
+
+      const userData: LoginResponse = {
+        token: response.user.access_token,
+        _id: response.user.user.id
+      };
+
+      dispatch(loginSuccess(userData));
       navigate('/dashboard');
     } catch (error) {
       const responseError = error as ErrorResponse;
@@ -148,7 +157,7 @@ export const Signup = (): JSX.Element => {
             colorScheme='teal'
             width='full'
             type='submit'
-            isLoading={isLoading}
+            isLoading={isRegisterLoading}
             loadingText='Registering...'
             _hover={{ transform: 'scale(1.05)' }}
             _active={{ transform: 'scale(0.95)' }}

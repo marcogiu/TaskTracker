@@ -10,6 +10,7 @@ const baseQuery = fetchBaseQuery({
       const { token } = JSON.parse(userInfo);
       if (token) {
         headers.set('Authorization', `Bearer ${token}`);
+        console.log('Token set in headers:', token); // Aggiungi questo per debug
       }
     }
     return headers;

@@ -18,6 +18,8 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     loginSuccess: (state, action: PayloadAction<UserInfo>) => {
+      console.log(action.payload);
+
       state.userInfo = action.payload;
       localStorage.setItem('userInfo', JSON.stringify(state.userInfo));
     },

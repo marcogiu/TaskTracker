@@ -7,10 +7,15 @@ import { useState, useEffect } from 'react';
 import { useGetUserFromIdQuery, useUpdateUserMutation, useDeleteUserMutation } from '../features/user/userSlice';
 
 export const Profile = (): JSX.Element => {
+  const user = useSelector((state: RootState) => state.auth.userInfo);
+
   const {
-    userInfo: { user }
-  } = useSelector((state: RootState) => state.auth);
-  const { data: userData, error, isLoading } = useGetUserFromIdQuery(user._id);
+    data: userData,
+    error,
+    isLoading
+  } = useGetUserFromIdQuery(user._id, {
+    skip: !user
+  });
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
   const [deleteUser] = useDeleteUserMutation();
   const [localUserData, setLocalUserData] = useState({ email: '', username: '' });
