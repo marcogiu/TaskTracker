@@ -3,6 +3,7 @@ import { Login, Signup, Home, Dashboard, Error, Profile } from './pages';
 import { Layout } from './components/Layout';
 import { Provider, useSelector } from 'react-redux';
 import { store, RootState } from './store';
+import { Stats } from './pages/Stats';
 
 // Component to handle redirection for the root path
 const HomeRoute = () => {
@@ -54,6 +55,7 @@ export const App = () => {
             <Route path='*' element={<Error />} />
             <Route element={<ProtectedRoute />}>
               <Route path='dashboard' element={<Dashboard />} />
+              <Route path='stats' element={<Stats />} />
               <Route path='me' element={<Profile />} />
             </Route>
           </Route>

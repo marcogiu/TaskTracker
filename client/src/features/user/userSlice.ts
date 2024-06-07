@@ -1,87 +1,39 @@
-import { apiService } from '../../service/apiService';
-import { User } from '../../models';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { UserInfo } from '../auth/authSlice';
 
-interface Data {
-  email: string;
-  password: string;
+interface UserState {
+  userInfo: UserInfo | null;
+  loading: boolean;
+  error: string | null;
 }
 
-interface UpdateData {
-  id: string;
-  data: {
-    email?: string;
-    username?: string;
-    password?: string;
-    confirmPassword?: string;
-  };
-}
+const initialState: UserState = {
+  userInfo: null,
+  loading: false,
+  error: null
+};
 
-export interface LoginResponse {
-  token: string;
-  _id: string;
-}
-
-export interface RegisterResponse {
-  message: string;
-  user: {
-    access_token: string;
-    user: {
-      id: string;
-    };
-  };
-}
-
-interface UpdateUserResponse {
-  user: User;
-}
-
-interface DeleteUserResponse {
-  success: boolean;
-}
-
-const USERS_URL = '/api/users';
-const AUTH_URL = '/api/auth';
-
-export const userSlice = apiService.injectEndpoints({
-  endpoints: (builder) => ({
-    login: builder.mutation<LoginResponse, Data>({
-      query: (data) => ({
-        url: `${AUTH_URL}/login`,
-        method: 'POST',
-        body: data
-      })
-    }),
-
-    register: builder.mutation<RegisterResponse, Data>({
-      query: (data) => ({
-        url: `${AUTH_URL}/register`,
-        method: 'POST',
-        body: data
-      })
-    }),
-
-    getUserFromId: builder.query<User, string>({
-      query: (id) => ({
-        url: `${USERS_URL}/${id}`,
-        method: 'GET'
-      })
-    }),
-
-    updateUser: builder.mutation<UpdateUserResponse, UpdateData>({
-      query: ({ id, data }) => ({
-        url: `${USERS_URL}/${id}`,
-        method: 'PATCH',
-        body: data
-      })
-    }),
-
-    deleteUser: builder.mutation<DeleteUserResponse, string>({
-      query: (id) => ({
-        url: `${USERS_URL}/${id}`,
-        method: 'DELETE'
-      })
-    })
-  })
+const userSlice = createSlice({
+  name: 'user',
+  initialState,
+  reducers: {
+    userLoginRequest(state) {
+      state.loading = true;
+      state.error = null;
+    },
+    userLoginSuccess(state, action: PayloadAction<UserInfo>) {
+      state.loading = false;
+      state.userInfo = action.payload;
+    },
+    userLoginFailure(state, action: PayloadAction<string>) {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    userLogout(state) {
+      state.userInfo = null;
+    }
+  }
 });
 
-export const { useLoginMutation, useRegisterMutation, useGetUserFromIdQuery, useUpdateUserMutation, useDeleteUserMutation } = userSlice;
+export const { userLoginRequest, userLoginSuccess, userLoginFailure, userLogout } = userSlice.actions;
+export default userSlice.reducer;

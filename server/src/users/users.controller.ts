@@ -18,9 +18,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async getAll(): Promise<User[]> {
-    console.log('Tutti gli utenti');
     const users = await this.usersService.findAll();
-    console.log('Fetched users:', users);
     return users;
   }
 

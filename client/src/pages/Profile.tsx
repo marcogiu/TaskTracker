@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { logout } from '../features/auth/authSlice';
 import { RootState } from '../store';
 import { useState, useEffect } from 'react';
-import { useGetUserFromIdQuery, useUpdateUserMutation, useDeleteUserMutation } from '../features/user/userSlice';
+import { useGetUserByIdQuery, useUserDeleteMutation, useUserUpdateMutation } from '../service/userService';
 
 export const Profile = (): JSX.Element => {
   const user = useSelector((state: RootState) => state.auth.userInfo);
@@ -13,11 +13,11 @@ export const Profile = (): JSX.Element => {
     data: userData,
     error,
     isLoading
-  } = useGetUserFromIdQuery(user._id, {
+  } = useGetUserByIdQuery(user._id, {
     skip: !user
   });
-  const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
-  const [deleteUser] = useDeleteUserMutation();
+  const [updateUser, { isLoading: isUpdating }] = useUserUpdateMutation();
+  const [deleteUser] = useUserDeleteMutation();
   const [localUserData, setLocalUserData] = useState({ email: '', username: '' });
   const navigate = useNavigate();
   const dispatch = useDispatch();

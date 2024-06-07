@@ -9,7 +9,7 @@ interface ITaskSectionProps {
 export const TaskSection = (props: ITaskSectionProps): JSX.Element => {
   const { tasks } = props;
   return (
-    <Flex>
+    <Flex borderWidth={2} borderColor='teal.300'>
       <Text fontSize='2xl' fontWeight='bold' color='teal.700' mb={4}>
         Total Task: 23
       </Text>

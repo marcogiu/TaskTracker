@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../features/auth/authSlice';
 import * as Model from '../models';
-import { LoginResponse, useLoginMutation } from '../features/user/userSlice';
+import { LoginResponse, useUserLoginMutation } from '../service/userService';
 
 const MotionBox = motion(Box);
 
@@ -17,7 +17,7 @@ export const Login = (): JSX.Element => {
   const toast = useToast();
   const bg = useColorModeValue('white', 'gray.700');
 
-  const [login, { isLoading }] = useLoginMutation();
+  const [login, { isLoading }] = useUserLoginMutation();
   const dispatch = useDispatch();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,8 +40,6 @@ export const Login = (): JSX.Element => {
 
     try {
       const result = await login(formData).unwrap();
-      console.log('result', result);
-
       const userData: LoginResponse = {
         token: result.token,
         _id: result._id

@@ -13,12 +13,10 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   }
 
   canActivate(context: ExecutionContext) {
-    console.log('JwtAuthGuard: Checking authentication...');
     return super.canActivate(context);
   }
 
   handleRequest(err, user) {
-    console.log('JwtAuthGuard: Handling request...');
     if (err || !user) {
       console.error('JwtAuthGuard Error:', err || 'User not found');
       throw err || new UnauthorizedException();

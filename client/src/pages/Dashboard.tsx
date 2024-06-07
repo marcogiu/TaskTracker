@@ -1,31 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Grid, Spinner, Alert, AlertIcon } from '@chakra-ui/react';
+import { Grid, GridItem } from '@chakra-ui/react';
 import { Calendar } from '../components';
 import * as Model from '../models';
 import * as Utilities from '../utils/Utilities';
 import data from '../../dataTest.json';
 import { TaskSection } from '../components/TaskSection';
-import { Summary } from '../components/Summary';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store';
-import { useGetUserFromIdQuery } from '../features/user/userSlice';
 
 export const Dashboard = () => {
   const [tasks, setTasks] = useState<Model.Task[]>([]);
-
-  const user = useSelector((state: RootState) => state.auth.userInfo);
-
-  const {
-    data: userData,
-    error,
-    isLoading
-  } = useGetUserFromIdQuery(user._id, {
-    skip: !user
-  });
-
-  const addTask = (task: Model.Task) => {
-    setTasks([...tasks, task]);
-  };
 
   useEffect(() => {
     const tasksWithDates = data.tasks.map((task) => ({
@@ -40,25 +22,18 @@ export const Dashboard = () => {
     setTasks(tasksWithDates);
   }, []);
 
-  if (isLoading) {
-    return <Spinner size='xl' />;
-  }
-
-  if (error) {
-    return (
-      <Alert status='error'>
-        <AlertIcon />
-        There was an error processing your request
-      </Alert>
-    );
-  }
-
   return (
-    <Grid templateRows='auto 1fr' h='100vh' p={5} overflow='hidden'>
-      <Summary addTask={addTask} user={userData} />
-      <Grid templateColumns='repeat(2, 1fr)' gap={6} h='full'>
-        <TaskSection tasks={tasks} />
-        <Calendar />
+    <Grid templateRows='auto 1fr' h='90vh' p={5} overflow='hidden'>
+      <Grid templateColumns='repeat(2, 1fr)' templateRows='repeat(2, 1fr)' gap={6} h='full'>
+        <GridItem colSpan={1} rowSpan={2}>
+          <TaskSection tasks={tasks} />
+        </GridItem>
+        <GridItem colSpan={1} rowSpan={1}>
+          <Calendar />
+        </GridItem>
+        <GridItem colSpan={1} rowSpan={1} borderWidth={2} borderColor='teal.800'>
+          cia
+        </GridItem>
       </Grid>
     </Grid>
   );

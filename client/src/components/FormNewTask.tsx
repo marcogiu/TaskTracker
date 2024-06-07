@@ -28,8 +28,6 @@ export const FormNewTask = ({ onAddTask }: IFormNewTaskProps): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [task, setTask] = useState<Model.Task>(Constants.EmptyTask);
 
-  console.log(task);
-
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setTask((prev) => ({ ...prev, [name]: value }));

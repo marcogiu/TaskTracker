@@ -7,7 +7,7 @@ import { User } from '../models';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../features/auth/authSlice';
 import * as Constants from '../utils/Constants';
-import { LoginResponse, useRegisterMutation } from '../features/user/userSlice';
+import { LoginResponse, useUserRegisterMutation } from '../service/userService';
 
 const MotionBox = motion(Box);
 
@@ -35,7 +35,7 @@ export const Signup = (): JSX.Element => {
   });
   const navigate = useNavigate();
   const toast = useToast();
-  const [register, { isLoading: isRegisterLoading }] = useRegisterMutation();
+  const [register, { isLoading: isRegisterLoading }] = useUserRegisterMutation();
   const bg = useColorModeValue('white', 'gray.700');
   const dispatch = useDispatch();
 
@@ -73,8 +73,6 @@ export const Signup = (): JSX.Element => {
         isClosable: true,
         position: 'top'
       });
-
-      console.log(response);
 
       const userData: LoginResponse = {
         token: response.user.access_token,

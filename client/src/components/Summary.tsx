@@ -1,34 +1,49 @@
-import { Flex, Heading, Box, Text, Button } from '@chakra-ui/react';
+import { Flex, Heading, Box, Text, Input, IconButton, Menu, MenuList, MenuItem } from '@chakra-ui/react';
 import dayjs from 'dayjs';
-import { FormNewTask } from './FormNewTask';
-import * as Model from '../models';
+import { BellIcon, SearchIcon, StarIcon } from '@chakra-ui/icons';
+import { CgProfile } from 'react-icons/cg';
+import { AiOutlineLogout } from 'react-icons/ai';
+import { FiSettings } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
+import * as Model from '../models';
 
 interface ISummaryProps {
   user: Model.User | undefined;
-  addTask: (task: Model.Task) => void;
 }
 
 export const Summary = (props: ISummaryProps): JSX.Element => {
-  const { user, addTask } = props;
+  const { user } = props;
   const navigate = useNavigate();
 
   return (
-    <Flex justifyContent='space-between' alignItems='center' mb={5}>
-      <Flex alignItems='center'>
-        <Button onClick={() => navigate('/me')} mr={4}>
-          Vai al Profilo
-        </Button>
-        <Box>
-          <Heading as='h2' size='lg'>
-            <Text>Bentornato {user?.username}</Text>
-          </Heading>
-          <Text fontSize='md' color='gray.600'>
-            {dayjs().format('DD MMMM YYYY')}
-          </Text>
-        </Box>
+    <Flex justifyContent='space-between' h='10vh' alignItems='center' boxShadow='md'>
+      <Box>
+        <Heading as='h2' size='lg'>
+          <Text>Ciao {user?.username}</Text>
+        </Heading>
+        <Text fontSize='md' color='gray.600'>
+          {dayjs().format('DD MMMM YYYY')}
+        </Text>
+      </Box>
+      <Flex alignItems='center' gap={4}>
+        <Input placeholder='Cerca...' />
+        <IconButton title='Cerca' aria-label='Search' icon={<SearchIcon />} />
+        <IconButton title='Statistiche' aria-label='Stats' icon={<StarIcon />} onClick={() => navigate('/stats')} />
+        <IconButton title='Notifiche' aria-label='Notifications' icon={<BellIcon />} />
+        <Menu>
+          <MenuList>
+            <MenuItem icon={<CgProfile />} onClick={() => navigate('/me')}>
+              Profilo
+            </MenuItem>
+            <MenuItem icon={<FiSettings />} onClick={() => navigate('/settings')}>
+              Impostazioni
+            </MenuItem>
+            <MenuItem icon={<AiOutlineLogout />} onClick={() => {}}>
+              Logout
+            </MenuItem>
+          </MenuList>
+        </Menu>
       </Flex>
-      <FormNewTask onAddTask={addTask} />
     </Flex>
   );
 };
