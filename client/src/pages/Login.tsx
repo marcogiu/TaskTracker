@@ -42,6 +42,7 @@ export const Login = (): JSX.Element => {
       const result = await login(formData).unwrap();
       const userData: LoginResponse = {
         token: result.token,
+        refreshToken: result.refreshToken,
         _id: result._id
       };
 

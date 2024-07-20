@@ -6,7 +6,7 @@ export interface User {
   email: string;
   password: string;
   tasks: Task[];
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
+  createdAt?: string;
+  updatedAt?: string;
+  __v?: number;
 }

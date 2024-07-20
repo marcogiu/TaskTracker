@@ -26,8 +26,9 @@ export class TaskController {
   ): Promise<TaskDocument> {
     const task = {
       ...createTaskDto,
-      owner: req.user['userId'],
+      owner: req.user['_id'],
     };
+
     return this.taskService.create(task as Partial<TaskDocument>);
   }
 

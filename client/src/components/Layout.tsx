@@ -1,9 +1,11 @@
 import { Outlet } from 'react-router-dom';
 import { Flex, Box, Spinner, Center, Text } from '@chakra-ui/react';
-import { Navbar, Summary } from '.';
+import { Navbar } from '.';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { useGetUserByIdQuery } from '../service/userService';
+import Sidebar from './Sidebar';
+import { Summary } from './Summary';
 
 export const Layout = () => {
   const userInfo = useSelector((state: RootState) => state.auth.userInfo);
@@ -16,6 +18,7 @@ export const Layout = () => {
   } = useGetUserByIdQuery(userInfo?._id, {
     skip: !userInfo?._id
   });
+  console.log(userData);
 
   // Mostra uno spinner durante il caricamento dei dati dell'utente
   if (isLoading) {
@@ -36,12 +39,19 @@ export const Layout = () => {
   }
 
   return (
-    <Flex direction='column' minHeight='100vh' bg='white'>
-      {/* Mostra il componente Summary se userData è disponibile, altrimenti mostra il Navbar */}
-      {userData ? <Summary user={userData} /> : <Navbar />}
-      <Box flex='1'>
-        <Outlet />
-      </Box>
+    <Flex direction='column' h='100vh' bg='background'>
+      <Box as='header'>{!userInfo && <Navbar />}</Box>
+      <Flex as='main' flex='1'>
+        <Box as='section' w={userData ? '85%' : '100%'} position='fixed' left={userData ? '15%' : '0'} top='10vh'>
+          <Outlet />
+          {userInfo && (
+            <>
+              <Summary />
+              <Sidebar user={userData} />
+            </>
+          )}
+        </Box>
+      </Flex>
     </Flex>
   );
 };

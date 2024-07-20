@@ -65,6 +65,7 @@ export const Signup = (): JSX.Element => {
 
     try {
       const response = await register(formData).unwrap();
+
       toast({
         title: 'Registration Successful',
         description: 'You have successfully registered.',
@@ -76,6 +77,7 @@ export const Signup = (): JSX.Element => {
 
       const userData: LoginResponse = {
         token: response.user.access_token,
+        refreshToken: response.user.refreshToken,
         _id: response.user.user.id
       };
 

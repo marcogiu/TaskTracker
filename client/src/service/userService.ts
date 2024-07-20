@@ -1,9 +1,16 @@
 import apiService from './apiService';
-import { User } from '../models';
+import { Task, User } from '../models';
 
-interface Data {
+interface loginData {
   email: string;
   password: string;
+}
+
+interface registerData {
+  username: string;
+  email: string;
+  password: string;
+  tasks: Task[];
 }
 
 interface UpdateData {
@@ -18,6 +25,7 @@ interface UpdateData {
 
 export interface LoginResponse {
   token: string;
+  refreshToken: string;
   _id: string;
 }
 
@@ -25,6 +33,7 @@ export interface RegisterResponse {
   message: string;
   user: {
     access_token: string;
+    refreshToken: string;
     user: {
       id: string;
     };
@@ -44,7 +53,7 @@ const AUTH_URL = '/api/auth';
 
 export const userApi = apiService.injectEndpoints({
   endpoints: (builder) => ({
-    login: builder.mutation<LoginResponse, Data>({
+    login: builder.mutation<LoginResponse, loginData>({
       query: (data) => ({
         url: `${AUTH_URL}/login`,
         method: 'POST',
@@ -52,7 +61,7 @@ export const userApi = apiService.injectEndpoints({
       })
     }),
 
-    register: builder.mutation<RegisterResponse, Data>({
+    register: builder.mutation<RegisterResponse, registerData>({
       query: (data) => ({
         url: `${AUTH_URL}/register`,
         method: 'POST',

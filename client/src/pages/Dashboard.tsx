@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Grid, GridItem } from '@chakra-ui/react';
-import { Calendar } from '../components';
 import * as Model from '../models';
 import * as Utilities from '../utils/Utilities';
 import data from '../../dataTest.json';
 import { TaskSection } from '../components/TaskSection';
+import { StatsCard } from '../components/StatsCard';
+import { Calendar } from '../components/Calendar';
 
 export const Dashboard = () => {
   const [tasks, setTasks] = useState<Model.Task[]>([]);
@@ -23,20 +24,14 @@ export const Dashboard = () => {
   }, []);
 
   return (
-    <Grid templateRows='auto 1fr' h='90vh' p={5} overflow='hidden'>
-      <Grid templateColumns='repeat(2, 1fr)' templateRows='repeat(2, 1fr)' gap={6} h='full'>
-        <GridItem colSpan={1} rowSpan={2}>
-          <TaskSection tasks={tasks} />
-        </GridItem>
-        <GridItem colSpan={1} rowSpan={1}>
-          <Calendar />
-        </GridItem>
-        <GridItem colSpan={1} rowSpan={1} borderWidth={2} borderColor='teal.800'>
-          cia
-        </GridItem>
-      </Grid>
+    <Grid templateColumns='2fr 1fr' flex='1' width='100%' h='89vh' m='0 auto' gap={2}>
+      <GridItem colSpan={1}>
+        <TaskSection tasks={tasks} />
+      </GridItem>
+      <GridItem colSpan={1} display='grid' gridTemplateRows='1fr 1fr' gap={2}>
+        <StatsCard tasks={tasks} />
+        <Calendar />
+      </GridItem>
     </Grid>
   );
 };
-
-export default Dashboard;

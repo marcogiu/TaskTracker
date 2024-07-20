@@ -25,6 +25,8 @@ export class TaskService {
       { $push: { tasks: savedTask._id } },
     );
 
+    console.log(savedTask);
+
     return savedTask;
   }
 

@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface UserInfo {
   token: string;
+  refreshToken: string;
   _id: string;
 }
 
@@ -24,10 +25,16 @@ const authSlice = createSlice({
     logout: (state) => {
       state.userInfo = null;
       localStorage.removeItem('userInfo');
+    },
+    refreshSuccess: (state, action: PayloadAction<{ token: string }>) => {
+      if (state.userInfo) {
+        state.userInfo.token = action.payload.token;
+        localStorage.setItem('userInfo', JSON.stringify(state.userInfo));
+      }
     }
   }
 });
 
-export const { loginSuccess, logout } = authSlice.actions;
+export const { loginSuccess, logout, refreshSuccess } = authSlice.actions;
 
 export default authSlice.reducer;

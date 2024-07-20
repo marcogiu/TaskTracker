@@ -105,8 +105,7 @@ export const Profile = (): JSX.Element => {
   }
 
   return (
-    <Box p={5} shadow='md' borderWidth='1px' flex='1' borderRadius='md'>
-      <Button onClick={() => navigate('/dashboard')}>Torna alla dashboard</Button>
+    <Box p={5} shadow='md' borderWidth={2} flex='1' borderRadius='md' borderColor='button' width='98%' h='89vh' m='0 auto'>
       <FormControl id='email' isRequired>
         <FormLabel>Email</FormLabel>
         <Input type='email' value={localUserData.email} onChange={(e) => setLocalUserData({ ...localUserData, email: e.target.value })} />

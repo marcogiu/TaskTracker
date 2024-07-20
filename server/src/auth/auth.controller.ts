@@ -4,10 +4,13 @@ import {
   Body,
   HttpException,
   HttpStatus,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -21,6 +24,7 @@ export class AuthController {
     }
     return {
       token: userInfo.access_token,
+      refresh_token: userInfo.refresh_token,
       _id: userInfo.user.id,
     };
   }
@@ -30,7 +34,16 @@ export class AuthController {
     const user = await this.authService.register(registerDto);
     return {
       message: 'User registered successfully',
-      user: user,
+      token: user.access_token,
+      refresh_token: user.refresh_token,
+      user: user.user,
     };
+  }
+
+  @UseGuards(AuthGuard('jwt-refresh'))
+  @Post('refresh')
+  async refresh(@Req() req) {
+    const refreshToken = req.user.refreshToken;
+    return this.authService.refresh(refreshToken);
   }
 }

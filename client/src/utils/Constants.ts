@@ -21,8 +21,5 @@ export const initialUserState: Model.User = {
   username: '',
   email: '',
   password: '',
-  tasks: [],
-  createdAt: '',
-  updatedAt: '',
-  __v: 0
+  tasks: []
 };
